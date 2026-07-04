@@ -21,3 +21,5 @@ Dieser Workflow empfängt eingehende E-Mail-Anfragen, klassifiziert sie automati
 
 ## Autor
 Mohammad Aburdan
+## Status
+✅ Live und funktionsfähig – automatische Klassifizierung und Beantwortung eingehender E-Mails via n8n + OpenAI API.
