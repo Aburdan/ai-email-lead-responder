@@ -1,0 +1,125 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -128,
+        -16
+      ],
+      "id": "ad9aa897-15b6-4bc4-8552-50e2414c37b8",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RvVp1lDR1CZ7zkA5",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "id"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Analysiere die folgende E-Mail und ordne sie einer dieser Kategorien zu: Preisanfrage / Beschwerde / Allgemeines Interesse / Sonstiges.\nVerfasse anschließend eine passende, höfliche Antwort auf Deutsch.\n\nE-Mail-Text:\n{{ $json.snippet }}\n\nAntworte ausschließlich in diesem Format:\nKategorie: [Kategorie]\nAntwortvorschlag: [Antworttext]"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        96,
+        0
+      ],
+      "id": "dee25c3e-6473-40ae-a333-789e6e6cef6b",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "CTyJG5EulZSJMR3p",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "message": "={{ $json.output[0].content[0].text.split('Antwortvorschlag:')[1].trim() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "41590c34-590d-46ab-9684-c575bd5cf8cd",
+      "name": "Reply to a message",
+      "webhookId": "6f9596b6-ec8c-4860-b1c7-6a661a8e21ce",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RvVp1lDR1CZ7zkA5",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1c0545dd-5805-4f78-9d5c-304204338d55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "452bb5e71bc656830373bb9b324927ae86151533ffea8e18e80917670f265040"
+  },
+  "nodeGroups": [],
+  "id": "fPOcHgpBUHLPcjiv",
+  "tags": []
+}
